@@ -2,7 +2,6 @@ turtle
 streamlit
 pandas
 pathlib
-plotly.express
-plotly.graph_objects
+plotly
 kaggle
 st_aggrid
