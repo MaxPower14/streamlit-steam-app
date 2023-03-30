@@ -1,4 +1,3 @@
-turtle
 streamlit
 pandas
 pathlib
