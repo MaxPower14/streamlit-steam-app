@@ -1,0 +1,8 @@
+turtle
+streamlit
+pandas
+pathlib
+plotly.express
+plotly.graph_objects
+kaggle
+st_aggrid
