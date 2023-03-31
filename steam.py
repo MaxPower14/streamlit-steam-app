@@ -1,4 +1,3 @@
-from turtle import title
 import streamlit as st
 import pandas as pd
 import subprocess
@@ -109,14 +108,14 @@ with intro:
         st.subheader(
             "A Streamlit web app by [Hiram Cortes](https://www.linkedin.com/in/hdcortesd/)"
             )
-        st.markdown("You can find the source code on my [GitHub]()")
+        st.markdown("You can find the source code on my [GitHub](https://github.com/MaxPower14/streamlit-steam-app)")
     row1_1, row1_spacer2 = st.columns((4.2, 0.1))
 
     with row1_1:
         st.markdown(
             "Hey there! Welcome to Hiram's Steam sales Analysis App. This app scrapes daily the Steam games currently on sale and analyzes them, looking into different distributions of the data like discount, reviews and prices. Giving a breakdown by tag and taking a closer look on which conditions to look to land a better deal from a money saving perspective. After some intersting graphs, it gives to you the best price-quality deals with a simple formula that I came up to and the games currently free. Give it a go!"
         )
-        st.markdown("⚠️ Notice: This dataset has not been curated to exclude NSFW titles, discretion is adviced.")
+        st.markdown("⚠️ Notice: This dataset has not been curated to exclude NSFW titles, discretion is advised.")
 
 with data:
 
@@ -219,9 +218,9 @@ with graphs:
         st.write(fig)
         st.markdown("Looks like the average game on sale today has a general reviews score of **{} %**. The game with the lowest general reviews is **{}** with **{}%** and the game with the highest general reviews is **{}** with **{}%**".format(
             gen_rev_avg, g_min_general_reviews, gen_rev_min, g_max_general_reviews, gen_rev_max))
-        fig = px.histogram(df, x="disc_price", nbins=12, title="Games distribution by discount price")
+        fig = px.histogram(df, x="disc_price", nbins=40, title="Games distribution by discount price")
         st.write(fig)
-        st.markdown("The average price after discount for today games is \$**{}**. Being **{}** the one with the lowest discount price with \$**{}** and **{}** the one with the highest discount price with \$**{}**.".format(
+        st.markdown("The average price after discount for today\'s games is \$**{}**. Being **{}** the one with the lowest discount price with \$**{}** and **{}** the one with the highest discount price with \$**{}**.".format(
             disc_price_avg, g_min_disc_price, disc_price_min, g_max_disc_price, disc_price_max
         ))
        
@@ -234,7 +233,7 @@ with graphs:
     with right_col:
         fig = px.bar(df_tags.head(15), x='tag', y='freq', title="Games distribution by tag")
         st.write(fig)
-        st.markdown("The breakdown by tag for the games for today puts **{}** as the most recurrent tag on sale with **{}** games and the least recurrent tag is **{}** with **{}** game(s).".format(
+        st.markdown("The breakdown by tag for the games of today puts **{}** as the most recurrent tag on sale with **{}** games and the least recurrent tag is **{}** with **{}** game(s).".format(
             max_tag, max_tag_count, min_tag, min_tag_count
         ))
         fig =  px.histogram(df, x="recent_reviews", title="Games distribution by recent reviews")
@@ -243,14 +242,14 @@ with graphs:
             rec_rev_avg, g_min_recent_reviews, rec_rev_min, g_max_recent_reviews, rec_rev_max))        
         fig = px.histogram(df, x="orig_price", nbins=50, title="Games distribution by original price")
         st.write(fig) 
-        st.markdown("The average price before discount for today games is \$**{}**. Being **{}** the one with the lowest original price with \$**{}** and **{}** the one with the original discount price with \$**{}**.".format(
+        st.markdown("The average price before discount for today\'s games is \$**{}**. Being **{}** the one with the lowest original price with \$**{}** and **{}** the one with the original discount price with \$**{}**.".format(
             org_price_avg, g_min_org_price, org_price_min, g_max_org_price, org_price_max
         ))        
         st.markdown("#")
         fig = px.box(df, y="dif_price", hover_name="name", hover_data=['general_reviews', 'orig_price', 'discount', 'disc_price'], title="Box plot for saving price")
         st.write(fig)
-        st.markdown("A box plot may help us to determine if the money we may be saving is an unusual case (outliers) or not. For today games, every game in which we are saving more than **\${}**, we can considered it as an unusual case and it could be a good idea considering buying it, at least from the money saving perspective. On the opposite hand, if we are saving less than **\${}** for any game, maybe we should consider other options first. ".format(
-            upper_range, lower_range
+        st.markdown("A box plot may help us to determine if the money we may be saving is an unusual case (outliers) or not. For today\'s games, every game in which we are saving more than **\${}**, we can considered it as an unusual case and it could be a good idea considering buying it, at least from the money saving perspective.".format(
+            upper_range
         ))
     
 
