@@ -4,4 +4,4 @@ This repository contains an Streamlit app for analyzing the current Steam games 
 [![Open in Streamlit](https://static.streamlit.io/badges/streamlit_badge_black_white.svg)](https://todaysteamsale.streamlit.app/)
 
 ## Data
-This app uses data gathered by a Scrapy spider hosted on a [Kaggle](https://www.kaggle.com/code/hdcortes/steam-sales-scrapper/notebook) notebook and it's saved as a [dataset](https://www.kaggle.com/datasets/hdcortes/daily-steam-sales) also allocated on Kaggle.
+This app uses data gathered by a Scrapy spider hosted on a [Kaggle](https://www.kaggle.com/code/hdcortes/steam-sales-scrapper/notebook) notebook and it's saved as a [dataset](https://www.kaggle.com/datasets/hdcortes/daily-steam-sales) also allocated on Kaggle. You can also find the spider source code in this repository (steamcrawler.py).
