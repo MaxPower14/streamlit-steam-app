@@ -15,58 +15,58 @@ kaggle.api.authenticate()
 kaggle.api.dataset_download_files('daily-steam-sales', unzip=True)
 
 st.set_page_config(layout="wide")
+df_raw = pd.read_json("steamgames.json")
 
 
 @st.cache_data()
-def load_data():
-    df = pd.read_json("steamgames.json")
+def load_data(df_raw):
     #Convert columns orig_price and disc_price to float
-    df.orig_price = df.orig_price.astype(float)
-    df.disc_price = df.disc_price.astype(float)
+    df_raw.orig_price = df_raw.orig_price.astype(float)
+    df_raw.disc_price = df_raw.disc_price.astype(float)
 
     # Separate recent_reviews and general_revies from reviews
-    df[['recent_reviews', 'general_reviews', 'borrar', 'borrar1']] = pd.DataFrame(df.reviews.tolist(), index= df.index)
+    df_raw[['recent_reviews', 'general_reviews', 'borrar', 'borrar1']] = pd.DataFrame(df_raw.reviews.tolist(), index= df_raw.index)
     #For some reason it creates 2 more empty columns, so just delete them
-    del df['borrar']
-    del df['borrar1']
+    del df_raw['borrar']
+    del df_raw['borrar1']
     # Get just the percentage numbers from the reviews
-    df['recent_reviews'] = df['recent_reviews'].str.extract('(\d+)%', expand=True)
-    df['general_reviews'] = df['general_reviews'].str.extract('(\d+)%', expand=True)
+    df_raw['recent_reviews'] = df_raw['recent_reviews'].str.extract('(\d+)%', expand=True)
+    df_raw['general_reviews'] = df_raw['general_reviews'].str.extract('(\d+)%', expand=True)
     # Erase the % symbol
-    df['general_reviews'] = df.general_reviews.replace(r'%', '', regex=True)
-    df['recent_reviews'] = df.recent_reviews.replace(r'%', '', regex=True)
+    df_raw['general_reviews'] = df_raw.general_reviews.replace(r'%', '', regex=True)
+    df_raw['recent_reviews'] = df_raw.recent_reviews.replace(r'%', '', regex=True)
     # Transform to float
-    df.recent_reviews = df.recent_reviews.astype(float)
-    df.general_reviews = df.general_reviews.astype(float)
+    df_raw.recent_reviews = df_raw.recent_reviews.astype(float)
+    df_raw.general_reviews = df_raw.general_reviews.astype(float)
 
     #Separete tags from list to string separated with a space
-    df['tags'] = [','.join(map(str, l)) for l in df['tags']]
-    df.tags = df.tags.replace(r'\s+', '', regex=True)
-    df.tags = df.tags.replace(r',', ' ', regex=True)
+    df_raw['tags'] = [','.join(map(str, l)) for l in df_raw['tags']]
+    df_raw.tags = df_raw.tags.replace(r'\s+', '', regex=True)
+    df_raw.tags = df_raw.tags.replace(r',', ' ', regex=True)
     # Get each tag as a new column, each game could have up to 20 different tags
     tag_columns = ["T1", "T2", "T3", "T4", "T5", "T6", "T7", "T8", "T9", "T10", "T11", "T12", "T13", "T14", "T15", "T16", "T17", "T18", "T19", "T20"]
-    df[tag_columns] = df.tags.str.split(" ", expand=True)
+    df_raw[tag_columns] = df_raw.tags.str.split(" ", expand=True)
     # Create a dataframe with the frequency of all tags
-    df_tags = df[tag_columns]
+    df_tags = df_raw[tag_columns]
     sr_tag = df_tags.stack().value_counts().sort_index()
     sr_tag = sr_tag.sort_values(ascending=False)
     df_tags = pd.DataFrame({'tag':sr_tag.index, 'freq':sr_tag.values})
     # Create column with the price differences
-    df['dif_price'] = df.orig_price - df.disc_price
+    df_raw['dif_price'] = df_raw.orig_price - df_raw.disc_price
 
 #Preprocessing to determine the best deals of the day
     #Get the games were it's general reviews are not Null
-    df_best = df[df['general_reviews'].notnull()]
+    df_best = df_raw[df_raw['general_reviews'].notnull()]
     #Get the games with general reviews are at least 80
-    df_best = df[df['general_reviews'] >= 80]
+    df_best = df_raw[df_raw['general_reviews'] >= 80]
     #Calculate the price-review ratio (made up formula)
     df_best['pr_ratio'] = df_best.dif_price * df_best.general_reviews 
     #Sort the dataframe in descending order
     df_best = df_best.sort_values(by='pr_ratio',ascending=False)
 
-    df_free = df[df['disc_price']==0]
+    df_free = df_raw[df_raw['disc_price']==0]
     
-    return df, df_tags, df_best.head(10), df_free
+    return df_raw, df_tags, df_best.head(10), df_free
 
 
 
@@ -120,7 +120,7 @@ with intro:
 with data:
 
     st.subheader('Today\'s data')    
-    df, df_tags, df_best, df_free = load_data()
+    df, df_tags, df_best, df_free = load_data(df_raw)
     num_games = "I found " + str(len(df)) + " games on sale! " + " 🎮"
     st.markdown(num_games)
     tag_columns = ["T1", "T2", "T3", "T4", "T5", "T6", "T7", "T8", "T9", "T10", "T11", "T12", "T13", "T14", "T15", "T16", "T17", "T18", "T19", "T20"]
