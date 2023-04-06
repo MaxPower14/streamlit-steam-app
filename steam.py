@@ -51,6 +51,8 @@ def load_data(df_raw):
     sr_tag = df_tags.stack().value_counts().sort_index()
     sr_tag = sr_tag.sort_values(ascending=False)
     df_tags = pd.DataFrame({'tag':sr_tag.index, 'freq':sr_tag.values})
+    df_tags.drop(df_tags[df_tags.tag == ""].index, inplace=True)
+
     # Create column with the price differences
     df_raw['dif_price'] = df_raw.orig_price - df_raw.disc_price
 
